@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Summo - AI Text Summarizer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Summo</h1>
+            <h2>AI-powered text summarization in seconds</h2>
+        </header>
+
+        <main>
+            <!-- Input Section -->
+            <div class="input-section">
+                <textarea 
+                    id="inputText" 
+                    placeholder="Type your thoughts..."
+                    rows="8"
+                ></textarea>
+                <button id="summarizeBtn" class="submit-btn">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Loading Spinner -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <p>Summarizing...</p>
+            </div>
+
+            <!-- Output Section -->
+            <div id="outputSection" class="output-section hidden">
+                <div class="output-header">
+                    <h3>Summary</h3>
+                    <button id="copyBtn" class="copy-btn">Copy</button>
+                </div>
+                <div id="summaryText" class="summary-text"></div>
+            </div>
+
+            <!-- Error Section -->
+            <div id="errorSection" class="error-section hidden">
+                <p id="errorText"></p>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

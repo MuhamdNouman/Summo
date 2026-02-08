@@ -1,0 +1,186 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    opacity: 0.9;
+}
+
+/* Input Section */
+.input-section {
+    background: white;
+    border-radius: 24px;
+    padding: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+textarea {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: none;
+    padding: 10px;
+    color: #333;
+}
+
+textarea::placeholder {
+    color: #999;
+}
+
+.submit-btn {
+    background: #6f87f1;
+    border: none;
+    border-radius: 50%;
+    width: 56px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.submit-btn:hover {
+    background: #5568d3;
+    transform: scale(1.05);
+}
+
+.submit-btn:active {
+    transform: scale(0.95);
+}
+
+.submit-btn svg {
+    color: white;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 40px;
+    color: white;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Output Section */
+.output-section {
+    background: #1a1a2e;
+    border-radius: 24px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.output-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.copy-btn {
+    background: #667eea;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+    background: #5568d3;
+}
+
+.summary-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+/* Error Section */
+.error-section {
+    background: #ff4757;
+    border-radius: 16px;
+    padding: 20px;
+    margin-top: 20px;
+    color: white;
+    text-align: center;
+}
+
+/* Utility */
+.hidden {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1rem;
+    }
+    
+    .input-section {
+        padding: 15px;
+    }
+}
