@@ -48,6 +48,41 @@ h2 {
     align-items: flex-end;
 }
 
+/* Add this after .input-section styles */
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.clear-btn {
+    background: #ff4757;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.clear-btn:hover {
+    background: #e84118;
+    transform: scale(1.05);
+}
+
+.clear-btn:active {
+    transform: scale(0.95);
+}
+
+.clear-btn svg {
+    color: white;
+}
+
 textarea {
     flex: 1;
     border: none;

@@ -6,6 +6,7 @@ const summaryText = document.getElementById('summaryText');
 const errorSection = document.getElementById('errorSection');
 const errorText = document.getElementById('errorText');
 const copyBtn = document.getElementById('copyBtn');
+const clearBtn = document.getElementById('clearBtn');
 
 // Summarize function
 async function summarize() {
@@ -86,3 +87,20 @@ inputText.addEventListener('keydown', (e) => {
         summarize();
     }
 });
+
+// Add this function after the copyToClipboard function
+
+function clearAll() {
+    // Clear input
+    inputText.value = '';
+    
+    // Hide all sections
+    hideAll();
+    
+    // Focus back on input
+    inputText.focus();
+}
+
+// Add this at the bottom with other event listeners
+
+clearBtn.addEventListener('click', clearAll);
