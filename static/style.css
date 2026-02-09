@@ -1,145 +1,296 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* --- Variables & Reset --- */
+:root {
+    --bg-dark: #0f172a;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --glow-color: rgba(99, 102, 241, 0.4);
+    --error-bg: rgba(220, 38, 38, 0.1);
+    --error-text: #fca5a5;
 }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
     min-height: 100vh;
     display: flex;
-    align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding-top: 5vh;
+    overflow-x: hidden;
 }
 
+/* --- Ambient Background Glow --- */
+.background-glow {
+    position: fixed;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+    filter: blur(100px);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+/* --- Layout --- */
 .container {
-    width: 100%;
-    max-width: 800px;
-}
-
-header {
+    width: 95%;          /* Increased width for side-by-side */
+    max-width: 1200px;   /* Allowed to grow wider */
     text-align: center;
-    margin-bottom: 40px;
-    color: white;
 }
 
+/* NEW: Grid Layout for Main Content */
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 2rem;
+    align-items: start; /* Aligns boxes to the top */
+    text-align: left; /* Reset text align for grid items */
+}
+
+/* --- Header --- */
+header { 
+    margin-bottom: 3rem; 
+    grid-column: 1 / -1; /* Header spans full width */
+}
+
+/* --- Title Animation --- */
 h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    margin-bottom: 10px;
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin: 0 0 0.5rem 0;
+    
+    /* The Magic Gradient: We add extra colors so it can 'move' */
+    background: linear-gradient(to right, #7480e8, #1597cb, #474693, #17165d);
+    background-size: 300% auto; /* Make background bigger than text so we can scroll it */
+    
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    
+    cursor: default; /* Shows regular pointer */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+}
+
+/* The Hover Effect */
+h1:hover {
+    /* 1. The Dance: Scales up and tilts slightly */
+    transform: scale(1.1) rotate(-2deg);
+    
+    /* 2. The Color Change: Speed up the gradient movement */
+    animation: rainbowMove 2s linear infinite;
+}
+
+/* Keyframes for the moving colors */
+@keyframes rainbowMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 h2 {
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 400;
-    opacity: 0.9;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0;
+    text-align: center;
 }
 
-/* Input Section */
+/* --- Input Section (Left Column) --- */
 .input-section {
-    background: white;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
     border-radius: 24px;
-    padding: 10px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    position: relative;
+    transition: border-color 0.3s ease;
+    height: 100%; /* Match height of content */
+    min-height: 400px; /* Ensure it looks substantial */
     display: flex;
-    gap: 15px;
-    align-items: flex-end;
-}
-
-/* Add this after .input-section styles */
-
-.button-group {
-    display: flex;
-    gap: 10px;
     flex-direction: column;
 }
 
-.clear-btn {
-    background: #ff4757;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.clear-btn:hover {
-    background: #e84118;
-    transform: scale(1.05);
-}
-
-.clear-btn:active {
-    transform: scale(0.95);
-}
-
-.clear-btn svg {
-    color: white;
+.input-section:focus-within {
+    border-color: rgba(99, 102, 241, 0.5);
 }
 
 textarea {
-    flex: 1;
+    width: 100%;
+    flex-grow: 1; /* Fills available space */
+    background: transparent;
     border: none;
-    outline: none;
-    font-size: 1rem;
+    color: var(--text-main);
+    font-size: 1.1rem;
+    line-height: 1.6;
     font-family: inherit;
     resize: none;
-    padding: 10px;
-    color: #333;
+    outline: none;
+    padding: 0;
 }
 
-textarea::placeholder {
-    color: #999;
+textarea::placeholder { color: #475569; }
+
+/* --- Buttons --- */
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--glass-border);
 }
 
 .submit-btn {
-    background: #6f87f1;
+    background: var(--primary-gradient);
     border: none;
-    border-radius: 50%;
-    width: 56px;
-    height: 56px;
+    padding: 12px 28px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
+    gap: 8px;
+    box-shadow: 0 10px 20px -5px var(--glow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .submit-btn:hover {
-    background: #5568d3;
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px var(--glow-color);
 }
 
-.submit-btn:active {
-    transform: scale(0.95);
+.submit-btn:active { transform: scale(0.98); }
+
+.clear-btn {
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.submit-btn svg {
-    color: white;
+.clear-btn:hover {
+    background: rgba(255,50,50, 0.1);
+    color: #ff6b6b;
+    border-color: rgba(255,50,50, 0.3);
 }
 
-/* Loading */
+/* --- Output Section (Right Column) --- */
+.output-section {
+    /* No margin-top needed in grid layout */
+    margin-top: 0; 
+    background: rgba(15, 23, 42, 0.6);
+    border-left: 4px solid #6366f1;
+    border-radius: 0 20px 20px 0;
+    padding: 2rem;
+    text-align: left;
+    height: 100%; /* Match input height */
+    min-height: 400px;
+    animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.output-header h3 {
+    margin: 0;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #818cf8;
+}
+
+.summary-text {
+    color: #e2e8f0;
+    line-height: 1.7;
+    font-size: 1.05rem;
+}
+
+.copy-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+
+.copy-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+
+/* --- Loading & Utilities --- */
+/* IMPORTANT: Fixes the spinner issue */
+.hidden { display: none !important; }
+
 .loading {
-    text-align: center;
-    padding: 40px;
-    color: white;
+    /* Centers loading in the right column */
+    height: 400px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-muted);
+    background: var(--glass-bg); /* Subtle box for loading state */
+    border-radius: 24px;
+    border: 1px dashed var(--glass-border);
 }
 
 .spinner {
-    border: 4px solid rgba(255, 255, 255, 0.3);
-    border-top: 4px solid white;
-    border-radius: 50%;
     width: 40px;
     height: 40px;
+    border: 3px solid rgba(99, 102, 241, 0.1);
+    border-top: 3px solid #6366f1;
+    border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin: 0 auto 15px;
+}
+
+/* --- Error Section --- */
+.error-section {
+    margin-top: 0;
+    padding: 2rem;
+    background: var(--error-bg);
+    border: 1px solid rgba(220, 38, 38, 0.2);
+    border-radius: 24px;
+    color: var(--error-text);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+}
+
+/* --- Animations --- */
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes spin {
@@ -147,75 +298,84 @@ textarea::placeholder {
     100% { transform: rotate(360deg); }
 }
 
-/* Output Section */
-.output-section {
-    background: #1a1a2e;
-    border-radius: 24px;
-    padding: 30px;
-    margin-top: 30px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-    color: white;
+/* --- Responsive (Mobile Stack) --- */
+@media (max-width: 900px) {
+    .container { width: 90%; }
+    
+    main { 
+        grid-template-columns: 1fr; /* Stack back to top-bottom */
+        gap: 1.5rem;
+    }
+    
+    .input-section, .output-section, .loading {
+        min-height: 300px; /* Smaller height for mobile */
+    }
+    
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 0.8rem; }
 }
 
-.output-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.output-header h3 {
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.copy-btn {
-    background: #667eea;
-    border: none;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
+/* --- Toast Notification --- */
+.toast {
+    visibility: hidden; /* Hidden by default */
+    min-width: 250px;
+    margin-left: -125px; /* Center it (half of min-width) */
+    background: rgba(15, 23, 42, 0.9); /* Dark background */
+    color: #fff;
+    text-align: center;
+    border-radius: 50px; /* Pill shape */
+    padding: 16px;
+    position: fixed;
+    z-index: 100;
+    left: 50%;
+    bottom: 30px; /* Distance from bottom */
     font-size: 0.9rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    transform: translateY(20px);
+    opacity: 0;
     transition: all 0.3s ease;
 }
 
-.copy-btn:hover {
-    background: #5568d3;
+/* Class to trigger the show animation */
+.toast.show {
+    visibility: visible;
+    transform: translateY(0);
+    opacity: 1;
 }
 
-.summary-text {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #e0e0e0;
+/* --- Typewriter Effect --- */
+.typewriter-container {
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin: 0;
+    min-height: 1.5em; /* Prevents layout jump when text is deleted */
+    display: flex;
+    justify-content: center; /* Center the text and cursor */
+    align-items: center;
 }
 
-/* Error Section */
-.error-section {
-    background: #ff4757;
-    border-radius: 16px;
-    padding: 20px;
-    margin-top: 20px;
-    color: white;
-    text-align: center;
+.typewriter-text {
+    /* Ensures the gradient text doesn't clash */
+    background: none;
+    -webkit-text-fill-color: var(--text-muted);
 }
 
-/* Utility */
-.hidden {
-    display: none;
+.cursor {
+    display: inline-block;
+    background-color: #6366f1; /* Your accent color */
+    width: 2px;
+    height: 1.2em;
+    margin-left: 5px;
+    animation: blink 1s infinite;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2rem;
-    }
-    
-    h2 {
-        font-size: 1rem;
-    }
-    
-    .input-section {
-        padding: 15px;
-    }
+/* Cursor Blink Animation */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }

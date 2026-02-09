@@ -5,57 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Summo - AI Text Summarizer</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="background-glow"></div>
+
     <div class="container">
         <header>
             <h1>Summo</h1>
-            <h2>AI-powered text summarization in seconds</h2>
+            <h2 class="typewriter-container">
+                <span id="typewriter" class="typewriter-text"></span><span class="cursor">|</span>
+            </h2>
         </header>
 
         <main>
-            <!-- Input Section -->
             <div class="input-section">
                 <textarea 
-                id="inputText" 
-                placeholder="Type your thoughts..."
-                rows="8"
+                    id="inputText" 
+                    placeholder="Paste your long-form content here..." 
+                    rows="8"
                 ></textarea>
-               <div class="button-group">
+                
+                <div class="button-group">
                     <button id="clearBtn" class="clear-btn" title="Clear text">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M18 6L6 18M6 6l12 12"/>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
                         </svg>
                     </button>
+                    
                     <button id="summarizeBtn" class="submit-btn">
-                       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M5 12h14M12 5l7 7-7 7"/>
+                        <span>Summarize</span>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2L14.3636 7.63636L20 10L14.3636 12.3636L12 18L9.63636 12.3636L4 10L9.63636 7.63636L12 2Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M19 17L20.1818 19.8182L23 21L20.1818 22.1818L19 25L17.8182 22.1818L15 21L17.8182 19.8182L19 17Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                            <path d="M5 16L5.81818 18.1818L8 19L5.81818 19.8182L5 22L4.18182 19.8182L2 19L4.18182 18.1818L5 16Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
                         </svg>
                     </button>
                 </div>
             </div>
 
-            <!-- Loading Spinner -->
             <div id="loading" class="loading hidden">
                 <div class="spinner"></div>
-                <p>Summarizing...</p>
+                <p>Distilling insights...</p>
             </div>
 
-            <!-- Output Section -->
             <div id="outputSection" class="output-section hidden">
                 <div class="output-header">
-                    <h3>Summary</h3>
+                    <h3>AI Summary</h3>
                     <button id="copyBtn" class="copy-btn">Copy</button>
                 </div>
                 <div id="summaryText" class="summary-text"></div>
             </div>
 
-            <!-- Error Section -->
             <div id="errorSection" class="error-section hidden">
                 <p id="errorText"></p>
             </div>
         </main>
     </div>
+
+    <div id="toast" class="toast">Copied to clipboard!</div>
 
     <script src="/static/script.js"></script>
 </body>

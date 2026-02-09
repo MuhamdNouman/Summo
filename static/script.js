@@ -104,3 +104,89 @@ function clearAll() {
 // Add this at the bottom with other event listeners
 
 clearBtn.addEventListener('click', clearAll);
+
+// Select the toast element
+const toast = document.getElementById('toast');
+
+// New Copy Function with Toast
+function copyToClipboard() {
+    // Check if there is text to copy
+    if (!summaryText.innerText) return;
+
+    navigator.clipboard.writeText(summaryText.innerText)
+        .then(() => {
+            showToast("Copied to clipboard!");
+        })
+        .catch(err => {
+            console.error('Failed to copy:', err);
+            showToast("Failed to copy");
+        });
+}
+
+// Helper function to show and hide the toast
+function showToast(message) {
+    toast.innerText = message;
+    toast.className = "toast show"; // Add 'show' class to animate in
+
+    // After 3 seconds, remove the show class to animate out
+    setTimeout(function(){ 
+        toast.className = toast.className.replace("show", ""); 
+    }, 3000);
+}
+
+/* --- Typewriter Effect Logic --- */
+
+const typewriterElement = document.getElementById('typewriter');
+
+// 1. The Phrases to Rotate (You can edit these lines!)
+const phrases = [
+    "Turn long reads into quick insights.",
+    "Understand anything in seconds.",
+    "Summarize Now!"
+];
+
+let phraseIndex = 0; // Which phrase are we on?
+let charIndex = 0;   // Which character are we on?
+let isDeleting = false; // Are we typing or deleting?
+let typeSpeed = 25; // Speed of typing
+
+function typeEffect() {
+    const currentPhrase = phrases[phraseIndex];
+    
+    if (isDeleting) {
+        // Remove a character
+        typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+        typeSpeed = 50; // Deleting is faster
+    } else {
+        // Add a character
+        typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+        typeSpeed = 100; // Typing is normal speed
+    }
+
+    // SCENARIO: Finished Typing
+    if (!isDeleting && charIndex === currentPhrase.length) {
+        // Pause at the end so user can read it
+        isDeleting = true;
+        typeSpeed = 2000; // Wait 2 seconds before erasing
+    } 
+    
+    // SCENARIO: Finished Deleting
+    else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        // Move to next phrase
+        phraseIndex++;
+        // If we reached the end of the list, go back to start
+        if (phraseIndex === phrases.length) {
+            phraseIndex = 0;
+        }
+        typeSpeed = 500; // Small pause before typing next one
+    }
+
+    // Loop the function
+    setTimeout(typeEffect, typeSpeed);
+}
+
+// Start the animation when page loads
+document.addEventListener('DOMContentLoaded', typeEffect);
