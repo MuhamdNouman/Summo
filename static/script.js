@@ -1,67 +1,83 @@
+/* --- Select DOM Elements --- */
 const inputText = document.getElementById('inputText');
 const summarizeBtn = document.getElementById('summarizeBtn');
+const clearBtn = document.getElementById('clearBtn');
+const summaryMode = document.getElementById('summaryMode'); 
+
+// Output Section Elements
+const outputContainer = document.getElementById('outputContainer');
+const outputPlaceholder = document.getElementById('outputPlaceholder');
 const loading = document.getElementById('loading');
-const outputSection = document.getElementById('outputSection');
+const resultContent = document.getElementById('resultContent');
 const summaryText = document.getElementById('summaryText');
 const errorSection = document.getElementById('errorSection');
 const errorText = document.getElementById('errorText');
 const copyBtn = document.getElementById('copyBtn');
-const clearBtn = document.getElementById('clearBtn');
+const toast = document.getElementById('toast');
 
-// Summarize function
+/* --- Main Summarize Function --- */
 async function summarize() {
     const text = inputText.value.trim();
+    const currentMode = summaryMode.value;
     
     if (!text) {
         showError('Please enter some text to summarize');
         return;
     }
     
-    // Hide previous results
-    hideAll();
+    // UI State: Loading
+    // 1. Hide Placeholder & Results
+    outputPlaceholder.classList.add('hidden');
+    resultContent.classList.add('hidden');
+    errorSection.classList.add('hidden');
+    
+    // 2. Show Loader
     loading.classList.remove('hidden');
     
     try {
-        const response = await fetch('/summarize', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ text: text })
+         const response = await fetch('/summarize', {
+             method: 'POST',
+             headers: { 'Content-Type': 'application/json' },
+             body: JSON.stringify({ 
+                text: text, 
+                mode: currentMode
+             })
         });
         
         const data = await response.json();
         
+        // Hide Loader
         loading.classList.add('hidden');
         
         if (data.success) {
-            summaryText.textContent = data.summary;
-            outputSection.classList.remove('hidden');
+            // UI State: Success
+            summaryText.innerHTML = formatSummary(data.summary); // Use innerHTML to support bullets if needed
+            resultContent.classList.remove('hidden');
         } else {
             showError(data.error || 'Something went wrong');
+            // Show placeholder again if it failed
+            outputPlaceholder.classList.remove('hidden');
         }
         
-    } catch (error) {
+    } 
+    catch (error) {
         loading.classList.add('hidden');
         showError('Failed to connect to server');
+        outputPlaceholder.classList.remove('hidden');
     }
+
+    
 }
 
-// Copy to clipboard
-function copyToClipboard() {
-    navigator.clipboard.writeText(summaryText.textContent)
-        .then(() => {
-            copyBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyBtn.textContent = 'Copy';
-            }, 2000);
-        })
-        .catch(err => {
-            console.error('Failed to copy:', err);
-        });
+/* --- Utility Functions --- */
+
+// Optional: Format text if needed (e.g. convert newlines to <br>)
+function formatSummary(text) {
+    // specific formatting logic can go here if the backend returns raw text
+    return text.replace(/\n/g, '<br>'); 
 }
 
-// Show error
+// Show Error Message
 function showError(message) {
     errorText.textContent = message;
     errorSection.classList.remove('hidden');
@@ -70,52 +86,36 @@ function showError(message) {
     }, 5000);
 }
 
-// Hide all sections
-function hideAll() {
-    loading.classList.add('hidden');
-    outputSection.classList.add('hidden');
-    errorSection.classList.add('hidden');
-}
-
-// Event listeners
-summarizeBtn.addEventListener('click', summarize);
-copyBtn.addEventListener('click', copyToClipboard);
-
-// Enter to submit (Ctrl+Enter)
-inputText.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.key === 'Enter') {
-        summarize();
-    }
-});
-
-// Add this function after the copyToClipboard function
-
+// Clear All Inputs & Reset to Default
 function clearAll() {
-    // Clear input
     inputText.value = '';
-    
-    // Hide all sections
-    hideAll();
-    
-    // Focus back on input
     inputText.focus();
+    
+    // Reset Right Side to "Placeholder" state
+    loading.classList.add('hidden');
+    resultContent.classList.add('hidden');
+    errorSection.classList.add('hidden');
+    
+    // Show the placeholder again
+    outputPlaceholder.classList.remove('hidden');
 }
 
-// Add this at the bottom with other event listeners
-
-clearBtn.addEventListener('click', clearAll);
-
-// Select the toast element
-const toast = document.getElementById('toast');
-
-// New Copy Function with Toast
+// Copy to Clipboard
 function copyToClipboard() {
-    // Check if there is text to copy
-    if (!summaryText.innerText) return;
+    const textToCopy = summaryText.innerText;
+    
+    if (!textToCopy) return;
 
-    navigator.clipboard.writeText(summaryText.innerText)
+    navigator.clipboard.writeText(textToCopy)
         .then(() => {
             showToast("Copied to clipboard!");
+            
+            // Optional: Change button text temporarily
+            const originalText = copyBtn.innerText;
+            copyBtn.innerText = 'Copied!';
+            setTimeout(() => {
+                copyBtn.innerText = originalText;
+            }, 2000);
         })
         .catch(err => {
             console.error('Failed to copy:', err);
@@ -123,70 +123,67 @@ function copyToClipboard() {
         });
 }
 
-// Helper function to show and hide the toast
+// Toast Notification
 function showToast(message) {
     toast.innerText = message;
-    toast.className = "toast show"; // Add 'show' class to animate in
-
-    // After 3 seconds, remove the show class to animate out
-    setTimeout(function(){ 
+    toast.className = "toast show";
+    setTimeout(() => { 
         toast.className = toast.className.replace("show", ""); 
     }, 3000);
 }
 
-/* --- Typewriter Effect Logic --- */
-
+/* --- Typewriter Effect --- */
 const typewriterElement = document.getElementById('typewriter');
-
-// 1. The Phrases to Rotate (You can edit these lines!)
-const phrases = [
-    "Turn long reads into quick insights.",
-    "Understand anything in seconds.",
-    "Summarize Now!"
-];
-
-let phraseIndex = 0; // Which phrase are we on?
-let charIndex = 0;   // Which character are we on?
-let isDeleting = false; // Are we typing or deleting?
-let typeSpeed = 25; // Speed of typing
-
-function typeEffect() {
-    const currentPhrase = phrases[phraseIndex];
+if (typewriterElement) { // Safety check
+    const phrases = [
+        "Turn long reads into quick insights.",
+        "Understand anything in seconds.",
+        "Summarize Now!"
+    ];
     
-    if (isDeleting) {
-        // Remove a character
-        typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
-        charIndex--;
-        typeSpeed = 50; // Deleting is faster
-    } else {
-        // Add a character
-        typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
-        charIndex++;
-        typeSpeed = 100; // Typing is normal speed
-    }
-
-    // SCENARIO: Finished Typing
-    if (!isDeleting && charIndex === currentPhrase.length) {
-        // Pause at the end so user can read it
-        isDeleting = true;
-        typeSpeed = 2000; // Wait 2 seconds before erasing
-    } 
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let typeSpeed = 50;
     
-    // SCENARIO: Finished Deleting
-    else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        // Move to next phrase
-        phraseIndex++;
-        // If we reached the end of the list, go back to start
-        if (phraseIndex === phrases.length) {
-            phraseIndex = 0;
+    function typeEffect() {
+        const currentPhrase = phrases[phraseIndex];
+        
+        if (isDeleting) {
+            typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+            charIndex--;
+            typeSpeed = 50;
+        } else {
+            typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+            charIndex++;
+            typeSpeed = 100;
         }
-        typeSpeed = 500; // Small pause before typing next one
+    
+        if (!isDeleting && charIndex === currentPhrase.length) {
+            isDeleting = true;
+            typeSpeed = 2000;
+        } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            phraseIndex++;
+            if (phraseIndex === phrases.length) phraseIndex = 0;
+            typeSpeed = 500;
+        }
+    
+        setTimeout(typeEffect, typeSpeed);
     }
-
-    // Loop the function
-    setTimeout(typeEffect, typeSpeed);
+    
+    // Start animation
+    document.addEventListener('DOMContentLoaded', typeEffect);
 }
 
-// Start the animation when page loads
-document.addEventListener('DOMContentLoaded', typeEffect);
+/* --- Event Listeners --- */
+summarizeBtn.addEventListener('click', summarize);
+copyBtn.addEventListener('click', copyToClipboard);
+clearBtn.addEventListener('click', clearAll);
+
+// Ctrl+Enter to Submit
+inputText.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.key === 'Enter') {
+        summarize();
+    }
+});

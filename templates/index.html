@@ -19,56 +19,74 @@
         </header>
 
         <main>
-            <div class="input-section">
-                <textarea 
-                    id="inputText" 
-                    placeholder="Paste your long-form content here..." 
-                    rows="8"
-                ></textarea>
+            
+    <div class="input-section">
+        <textarea 
+            id="inputText" 
+            placeholder="Paste your long-form content here..." 
+            rows="8"
+        ></textarea>
+        
+        <div class="input-footer">
+            
+            <select id="summaryMode" class="mode-select">
+                <option value="concise">Concise</option>
+                <option value="pro">Professional</option>
+                <option value="one-liner">One-Liner</option>
+            </select>
+
+            <div class="right-actions">
+                <button id="clearBtn" class="clear-btn" title="Clear text">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>
                 
-                <div class="button-group">
-                    <button id="clearBtn" class="clear-btn" title="Clear text">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="3 6 5 6 21 6"></polyline>
-                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                        </svg>
-                    </button>
-                    
-                    <button id="summarizeBtn" class="submit-btn">
-                        <span>Summarize</span>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L14.3636 7.63636L20 10L14.3636 12.3636L12 18L9.63636 12.3636L4 10L9.63636 7.63636L12 2Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                            <path d="M19 17L20.1818 19.8182L23 21L20.1818 22.1818L19 25L17.8182 22.1818L15 21L17.8182 19.8182L19 17Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                            <path d="M5 16L5.81818 18.1818L8 19L5.81818 19.8182L5 22L4.18182 19.8182L2 19L4.18182 18.1818L5 16Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-                        </svg>
-                    </button>
-                </div>
+                <button id="summarizeBtn" class="submit-btn">
+                    <span>Summarize</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L14.3636 7.63636L20 10L14.3636 12.3636L12 18L9.63636 12.3636L4 10L9.63636 7.63636L12 2Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                        <path d="M19 17L20.1818 19.8182L23 21L20.1818 22.1818L19 25L17.8182 22.1818L15 21L17.8182 19.8182L19 17Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                        <path d="M5 16L5.81818 18.1818L8 19L5.81818 19.8182L5 22L4.18182 19.8182L2 19L4.18182 18.1818L5 16Z" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+                    </svg>
+                </button>
             </div>
+        </div>
+    </div>
 
-            <div id="loading" class="loading hidden">
-                <div class="spinner"></div>
-                <p>Distilling insights...</p>
-            </div>
+    <div id="outputContainer" class="output-section">
+        
+        <div id="outputPlaceholder" class="output-placeholder-content">
+            <p>Add Text To Summarize</p>
+        </div>
 
-            <div id="outputSection" class="output-section hidden">
-                <div class="output-header">
-                    <h3>AI Summary</h3>
-                    <button id="copyBtn" class="copy-btn">Copy</button>
-                </div>
-                <div id="summaryText" class="summary-text"></div>
-            </div>
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Distilling insights...</p>
+        </div>
 
-            <div id="errorSection" class="error-section hidden">
-                <p id="errorText"></p>
+        <div id="resultContent" class="hidden">
+            <div class="output-header">
+                <h3>AI Summary</h3>
+                <button id="copyBtn" class="copy-btn">Copy</button>
             </div>
-        </main>
+            <div id="summaryText" class="summary-text"></div>
+        </div>
+        
+        <div id="errorSection" class="error-section hidden">
+            <p id="errorText"></p>
+        </div>
+
+    </div>
+</main> 
     </div>
 
     <div id="toast" class="toast">Copied to clipboard!</div>
 
     <div class="creator-badge">
             <span>Made by</span>
-            <span class="creator-name">Nouman</span>
+            <span class="creator-name">Muhammad Nouman</span>
             <div class="heartbeat"></div>
     </div>
 

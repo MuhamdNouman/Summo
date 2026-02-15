@@ -13,13 +13,17 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 # Setup templates
 templates = Jinja2Templates(directory="templates")
 
-class SummarizeRequest(BaseModel):
-    text: str
-
+# Pydantic Model for Get response
 class SummarizeResponse(BaseModel):
     success: bool
     summary: str = None
     error: str = None
+
+
+# Pydantic Model for Post response
+class SummarizeRequest(BaseModel):
+    text: str
+    mode: str = "default: general summary"
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -29,7 +33,14 @@ async def home(request: Request):
     
 @app.post("/summarize", response_model=SummarizeResponse)
 def summarize(request: SummarizeRequest) -> SummarizeResponse:
-    result = summarize_text(request.text)
+
+    data = request.model_dump()
+    text = data.get("text", "")
+    mode = data.get("mode", "default: general summary")
+
+    result = summarize_text(text, mode=mode)
+
+    print(f"DEBUG CHECKPOINT: The UI sent mode = '{mode}'")
 
     if not result.get('success'):
         return SummarizeResponse(

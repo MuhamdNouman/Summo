@@ -17,11 +17,14 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-main);
     font-family: 'Inter', sans-serif;
-    min-height: 100vh;
+    /* FIX: Lock height to viewport so page doesn't scroll */
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; 
     display: flex;
-    justify-content: center;
-    padding-top: 5vh;
-    overflow-x: hidden;
+    flex-direction: column; /* Organize vertically */
+    align-items: center;
+    padding-top: 3vh; /* Slightly less padding to fit everything */
 }
 
 /* --- Ambient Background Glow --- */
@@ -40,55 +43,50 @@ body {
 
 /* --- Layout --- */
 .container {
-    width: 95%;          /* Increased width for side-by-side */
-    max-width: 1200px;   /* Allowed to grow wider */
-    text-align: center;
-}
-
-/* NEW: Grid Layout for Main Content */
-main {
-    display: grid;
-    grid-template-columns: 1fr 1fr; /* Two equal columns */
-    gap: 2rem;
-    align-items: start; /* Aligns boxes to the top */
-    text-align: left; /* Reset text align for grid items */
+    width: 95%;
+    max-width: 1400px; /* Wider to accommodate side-by-side comfortably */
+    height: 85vh; /* Take up 85% of the screen height */
+    display: flex;
+    flex-direction: column;
 }
 
 /* --- Header --- */
 header { 
-    margin-bottom: 3rem; 
-    grid-column: 1 / -1; /* Header spans full width */
+    margin-bottom: 1.5rem; 
+    text-align: center;
+    flex-shrink: 0; /* Don't shrink the header */
+}
+
+/* --- Grid Layout for Main Content --- */
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 2rem;
+    align-items: stretch; /* Stretch boxes to fill height */
+    flex-grow: 1; /* Fill remaining vertical space */
+    min-height: 0; /* Crucial for nested scrolling to work */
 }
 
 /* --- Title Animation --- */
 h1 {
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 800;
     margin: 0 0 0.5rem 0;
-    
-    /* The Magic Gradient: We add extra colors so it can 'move' */
     background: linear-gradient(to right, #7480e8, #1597cb, #474693, #17165d);
-    background-size: 300% auto; /* Make background bigger than text so we can scroll it */
-    
+    background-size: 300% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     color: transparent;
-    
-    cursor: default; /* Shows regular pointer */
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy transition */
+    cursor: default;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* The Hover Effect */
 h1:hover {
-    /* 1. The Dance: Scales up and tilts slightly */
     transform: scale(1.1) rotate(-2deg);
-    
-    /* 2. The Color Change: Speed up the gradient movement */
     animation: rainbowMove 2s linear infinite;
 }
 
-/* Keyframes for the moving colors */
 @keyframes rainbowMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
@@ -96,7 +94,7 @@ h1:hover {
 }
 
 h2 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     font-weight: 400;
     color: var(--text-muted);
     text-transform: uppercase;
@@ -112,14 +110,12 @@ h2 {
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--glass-border);
     border-radius: 24px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    position: relative;
-    transition: border-color 0.3s ease;
-    height: 100%; /* Match height of content */
-    min-height: 400px; /* Ensure it looks substantial */
     display: flex;
     flex-direction: column;
+    height: 100%; /* Fill the grid cell */
+    overflow: hidden; /* Hide overflow so child scrolls */
 }
 
 .input-section:focus-within {
@@ -128,19 +124,56 @@ h2 {
 
 textarea {
     width: 100%;
-    flex-grow: 1; /* Fills available space */
+    flex-grow: 1; /* Fills all available space */
     background: transparent;
     border: none;
     color: var(--text-main);
-    font-size: 1.1rem;
+    font-size: 1rem;
     line-height: 1.6;
     font-family: inherit;
     resize: none;
     outline: none;
-    padding: 0;
+    padding: 10px;
+    
+    /* SCROLLABLE */
+    overflow-y: auto; 
 }
 
 textarea::placeholder { color: #475569; }
+
+/* Scrollbar Styling for Textarea & Output */
+textarea::-webkit-scrollbar, .summary-text::-webkit-scrollbar, .history-list::-webkit-scrollbar {
+    width: 8px;
+}
+textarea::-webkit-scrollbar-track, .summary-text::-webkit-scrollbar-track, .history-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+textarea::-webkit-scrollbar-thumb, .summary-text::-webkit-scrollbar-thumb, .history-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1); 
+    border-radius: 4px;
+}
+textarea::-webkit-scrollbar-thumb:hover, .summary-text::-webkit-scrollbar-thumb:hover, .history-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2); 
+}
+
+/* --- Controls Row (FIXED: Dropdown on Left) --- */
+.controls-row {
+    display: flex;
+    /* SWAP POSITIONS: Dropdown goes left, Count goes right */
+    flex-direction: row-reverse; 
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 0;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--glass-border);
+    flex-shrink: 0;
+}
+
+.char-count {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: monospace;
+}
 
 /* --- Buttons --- */
 .button-group {
@@ -148,9 +181,10 @@ textarea::placeholder { color: #475569; }
     justify-content: flex-end;
     align-items: center;
     gap: 1rem;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
     border-top: 1px solid var(--glass-border);
+    flex-shrink: 0;
 }
 
 .submit-btn {
@@ -199,16 +233,17 @@ textarea::placeholder { color: #475569; }
 
 /* --- Output Section (Right Column) --- */
 .output-section {
-    /* No margin-top needed in grid layout */
     margin-top: 0; 
     background: rgba(15, 23, 42, 0.6);
     border-left: 4px solid #6366f1;
-    border-radius: 0 20px 20px 0;
-    padding: 2rem;
+    border-radius: 20px;
+    padding: 1.5rem;
     text-align: left;
-    height: 100%; /* Match input height */
-    min-height: 400px;
+    height: 100%; /* Match grid height */
+    display: flex; /* Make it a flex container */
+    flex-direction: column;
     animation: slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    overflow: hidden;
 }
 
 .output-header {
@@ -216,6 +251,7 @@ textarea::placeholder { color: #475569; }
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
+    flex-shrink: 0;
 }
 
 .output-header h3 {
@@ -229,7 +265,21 @@ textarea::placeholder { color: #475569; }
 .summary-text {
     color: #e2e8f0;
     line-height: 1.7;
-    font-size: 1.05rem;
+    font-size: 1rem;
+    /* SCROLLABLE content only */
+    overflow-y: auto;
+    flex-grow: 1;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+/* Bullets styling */
+.summary-text ul, .summary-text ol {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    padding-left: 20px;
+}
+.summary-text li {
+    margin-bottom: 8px;
 }
 
 .copy-btn {
@@ -246,21 +296,21 @@ textarea::placeholder { color: #475569; }
 .copy-btn:hover { background: rgba(255,255,255,0.05); color: white; }
 
 /* --- Loading & Utilities --- */
-/* IMPORTANT: Fixes the spinner issue */
 .hidden { display: none !important; }
 
 .loading {
-    /* Centers loading in the right column */
-    height: 400px; 
+    height: 100%; 
+    width: 100%; /* Ensure it fills the space */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 15px;
     color: var(--text-muted);
-    background: var(--glass-bg); /* Subtle box for loading state */
-    border-radius: 24px;
-    border: 1px dashed var(--glass-border);
+    
+    /* REMOVED background and border-radius */
+    background: transparent; 
+    border-radius: 0;
 }
 
 .spinner {
@@ -271,10 +321,9 @@ textarea::placeholder { color: #475569; }
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
-
 /* --- Error Section --- */
 .error-section {
-    margin-top: 0;
+    height: 100%;
     padding: 2rem;
     background: var(--error-bg);
     border: 1px solid rgba(220, 38, 38, 0.2);
@@ -284,7 +333,6 @@ textarea::placeholder { color: #475569; }
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100px;
 }
 
 /* --- Animations --- */
@@ -300,35 +348,49 @@ textarea::placeholder { color: #475569; }
 
 /* --- Responsive (Mobile Stack) --- */
 @media (max-width: 900px) {
-    .container { width: 90%; }
+    body {
+        height: auto;
+        overflow-y: auto; /* Re-enable scroll for mobile */
+        padding-bottom: 50px;
+    }
+    
+    .container { 
+        width: 90%; 
+        height: auto;
+        display: block;
+    }
     
     main { 
-        grid-template-columns: 1fr; /* Stack back to top-bottom */
-        gap: 1.5rem;
+        display: block; /* Stack blocks */
     }
     
     .input-section, .output-section, .loading {
-        min-height: 300px; /* Smaller height for mobile */
+        min-height: 400px;
+        margin-bottom: 2rem;
     }
     
     h1 { font-size: 2.5rem; }
-    h2 { font-size: 0.8rem; }
+    
+    /* On mobile, maybe standard order is better? */
+    .controls-row {
+        flex-direction: row; /* Reset order for mobile if needed */
+    }
 }
 
 /* --- Toast Notification --- */
 .toast {
-    visibility: hidden; /* Hidden by default */
+    visibility: hidden;
     min-width: 250px;
-    margin-left: -125px; /* Center it (half of min-width) */
-    background: rgba(15, 23, 42, 0.9); /* Dark background */
+    margin-left: -125px;
+    background: rgba(15, 23, 42, 0.9);
     color: #fff;
     text-align: center;
-    border-radius: 50px; /* Pill shape */
+    border-radius: 50px;
     padding: 16px;
     position: fixed;
     z-index: 100;
     left: 50%;
-    bottom: 30px; /* Distance from bottom */
+    bottom: 30px;
     font-size: 0.9rem;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -338,7 +400,6 @@ textarea::placeholder { color: #475569; }
     transition: all 0.3s ease;
 }
 
-/* Class to trigger the show animation */
 .toast.show {
     visibility: visible;
     transform: translateY(0);
@@ -353,62 +414,53 @@ textarea::placeholder { color: #475569; }
     text-transform: uppercase;
     letter-spacing: 3px;
     margin: 0;
-    min-height: 1.5em; /* Prevents layout jump when text is deleted */
+    min-height: 1.5em;
     display: flex;
-    justify-content: center; /* Center the text and cursor */
+    justify-content: center;
     align-items: center;
 }
 
 .typewriter-text {
-    /* Ensures the gradient text doesn't clash */
     background: none;
     -webkit-text-fill-color: var(--text-muted);
 }
 
 .cursor {
     display: inline-block;
-    background-color: #6366f1; /* Your accent color */
+    background-color: #6366f1;
     width: 2px;
     height: 1.2em;
     margin-left: 5px;
     animation: blink 1s infinite;
 }
 
-/* Cursor Blink Animation */
 @keyframes blink {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
 }
 
-/* --- Creator Signature Badge (Expanding Effect) --- */
+/* --- Creator Signature Badge (Top Right) --- */
 .creator-badge {
     position: fixed;
     top: 25px;
     right: 30px;
-    
-    /* Glassmorphism Base */
     background: rgba(15, 23, 42, 0.6);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 50px;
-    
-    /* Layout & Animation Setup */
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
     padding: 8px 20px;
     z-index: 100;
-    
     font-size: 0.8rem;
     color: var(--text-muted);
     letter-spacing: 0.5px;
     cursor: default;
-    
-    /* The Expansion Magic */
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    min-width: 140px; /* Start width */
+    min-width: 140px;
 }
 
 .creator-name {
@@ -426,16 +478,15 @@ textarea::placeholder { color: #475569; }
     animation: pulse-red 2s infinite;
 }
 
-/* Hover State: Expansion */
 .creator-badge:hover {
-    padding: 8px 35px; /* Increase padding to expand */
+    padding: 8px 35px;
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(99, 102, 241, 0.5);
-    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); /* Glow */
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
 }
 
 .creator-badge:hover .creator-name {
-    color: #818cf8; /* Change text color to Indigo */
+    color: #818cf8;
     text-shadow: 0 0 8px rgba(129, 140, 248, 0.6);
 }
 
@@ -443,4 +494,311 @@ textarea::placeholder { color: #475569; }
     0% { transform: scale(0.95); opacity: 0.7; }
     70% { transform: scale(1.3); opacity: 0; }
     100% { transform: scale(0.95); opacity: 0; }
+}
+
+/* --- Glassy Dropdown Styling --- */
+.mode-select {
+    appearance: none;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    border: 1px solid var(--glass-border);
+    padding: 8px 16px;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.7rem top 50%;
+    background-size: 0.65rem auto;
+    padding-right: 2.5rem;
+}
+
+.mode-select:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5);
+}
+
+.mode-select:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.mode-select option {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+}
+
+/* =========================================
+   LAYOUT FIXES (Paste at end of file)
+   ========================================= */
+
+/* 1. Main Layout: Force Side-by-Side */
+main {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 2rem;
+    height: 100%;
+    align-items: stretch;
+    width: 100%;
+    min-height: 0;
+}
+
+/* 2. Box Sizing: Equal Widths */
+.input-section, .output-section {
+    flex: 1;
+    width: 50%;
+    margin: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative;
+    height: 100%; /* Fill container */
+}
+
+/* 3. Input Section Internal Layout */
+.input-section textarea {
+    flex-grow: 1; /* Pushes footer down */
+    height: auto;
+    margin-bottom: 1rem;
+    resize: none;
+}
+
+/* 4. The New Footer (Modes Left, Buttons Right) */
+.input-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    margin-top: auto; /* Sit at bottom */
+}
+
+.right-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* 5. Output Section Styling */
+.output-section {
+    justify-content: center; /* Center placeholder vertically */
+    align-items: center;     /* Center placeholder horizontally */
+    text-align: center;
+    background: rgba(15, 23, 42, 0.6); /* Ensure background is visible */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 24px;
+}
+
+/* Placeholder Text Style */
+.output-placeholder-content p {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    opacity: 0.8;
+}
+
+/* When content is loaded, fix alignment */
+.output-section:has(#resultContent:not(.hidden)) {
+    justify-content: flex-start;
+    align-items: stretch;
+    text-align: left;
+}
+#resultContent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 6. Hide old elements if they still exist in CSS */
+.controls-row { display: none !important; }
+
+/* =========================================
+   RESPONSIVE & BUTTON FIXES
+   ========================================= */
+
+/* 1. Fix Button Distortion (Global) */
+/* This prevents the text "Summarize" from getting cut off or squished */
+.submit-btn, .clear-btn, .mode-select {
+    flex-shrink: 0;       /* Never let these shrink smaller than their content */
+    white-space: nowrap;  /* Keep text on one line */
+}
+
+/* 2. Responsive Design (Tablets & Mobile) */
+/* Triggers when screen is smaller than 900px */
+@media (max-width: 900px) {
+    
+    /* Enable scrolling on the whole page */
+    body {
+        height: auto !important;
+        overflow-y: auto !important;
+        padding-bottom: 50px;
+    }
+
+    .container {
+        height: auto !important;
+        display: block !important;
+    }
+
+    /* Stack the Main Boxes Vertically */
+    main {
+        flex-direction: column !important;
+        height: auto !important; /* Let it grow as tall as needed */
+        gap: 2rem;
+    }
+
+    /* Make Input and Output Full Width */
+    .input-section, .output-section {
+        width: 100% !important;
+        flex: none !important;   /* Stop trying to share space */
+        min-height: 500px;       /* Give them a nice tall height */
+    }
+
+    /* Adjust the Footer for small screens */
+    .input-footer {
+        flex-wrap: wrap;         /* Allow buttons to wrap if screen is very tiny */
+        gap: 15px;
+        justify-content: center; /* Center them nicely */
+    }
+    
+    /* Fix the mode selector width on mobile */
+    .mode-select {
+        width: 100%;             /* Full width dropdown on mobile looks better */
+        text-align-last: center;
+    }
+    
+    .right-actions {
+        width: 100%;
+        justify-content: space-between; /* Spread buttons out */
+    }
+    
+    .submit-btn {
+        width: 100%;             /* Big clickable button */
+        justify-content: center;
+    }
+}
+
+/* =========================================
+   RESPONSIVE BUTTONS (Make them shorter)
+   ========================================= */
+
+/* 1. Prevent Squishing Globally */
+.submit-btn, .mode-select {
+    white-space: nowrap; /* Keeps text on one line */
+    flex-shrink: 0;      /* Prevents button from getting crushed */
+}
+
+/* 2. TABLET SIZE (Below 1100px) */
+/* Make buttons slightly more compact */
+@media (max-width: 1100px) {
+    .submit-btn {
+        padding: 10px 15px; /* Reduce padding */
+        font-size: 0.9rem;
+    }
+    .mode-select {
+        width: 140px; /* Force a smaller width for dropdown */
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+}
+
+/* 3. MOBILE SIZE (Below 768px) */
+/* The "Shortest" Version: Icon Only */
+@media (max-width: 768px) {
+    
+    /* STACK THE LAYOUT */
+    main {
+        flex-direction: column !important;
+        height: auto !important;
+        gap: 20px;
+    }
+
+    .input-section, .output-section {
+        width: 100% !important;
+        min-height: 400px;
+    }
+
+    /* HIDE TEXT inside the Summarize button */
+    .submit-btn span {
+        display: none; 
+    }
+
+    /* Make the button a square (Icon only) */
+    .submit-btn {
+        padding: 0;
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Adjust the footer to fit the smaller buttons */
+    .input-footer {
+        padding-top: 10px;
+    }
+
+    /* Make dropdown take available space */
+    .mode-select {
+        flex-grow: 1; 
+        width: auto;
+        margin-right: 10px;
+    }
+}
+
+/* --- Creator Badge (Moved to Bottom) --- */
+.creator-badge {
+    position: fixed;
+    /* Reset Top/Right so it doesn't stay up there */
+    top: auto;
+    right: auto;
+    
+    /* Move to Bottom Center */
+    bottom: 20px;       /* 10px from the bottom edge */
+    left: 50%;
+    transform: translateX(-50%); /* Centers it perfectly horizontally */
+    
+    /* Visual Styles */
+    background: rgba(15, 23, 42, 0.3); /* More transparent for the footer area */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    
+    /* Layout inside the badge */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 16px; /* Slightly smaller padding to fit tight space */
+    z-index: 100;
+    
+    /* Text Styles */
+    font-size: 0.75rem; /* Smaller font for footer */
+    color: var(--text-muted);
+    letter-spacing: 0.5px;
+    cursor: default;
+    transition: all 0.3s ease;
+}
+
+.creator-name {
+    font-weight: 700;
+    color: #e2e8f0;
+}
+
+.heartbeat {
+    width: 6px;
+    height: 6px;
+    background-color: #f43f5e;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #f43f5e;
+    animation: pulse-red 2s infinite;
+}
+
+/* Hover Effect */
+.creator-badge:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateX(-50%) translateY(-2px); /* Lift slightly on hover */
 }
