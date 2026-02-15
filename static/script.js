@@ -15,6 +15,13 @@ const errorText = document.getElementById('errorText');
 const copyBtn = document.getElementById('copyBtn');
 const toast = document.getElementById('toast');
 
+/* --- Custom Dropdown Logic --- */
+const dropdown = document.getElementById('modeDropdown');
+const trigger = dropdown.querySelector('.dropdown-trigger');
+const options = dropdown.querySelectorAll('.dropdown-option');
+const hiddenInput = document.getElementById('summaryMode'); // This holds the value for backend
+const selectedText = document.getElementById('selectedModeText');
+
 /* --- Main Summarize Function --- */
 async function summarize() {
     const text = inputText.value.trim();
@@ -185,5 +192,37 @@ clearBtn.addEventListener('click', clearAll);
 inputText.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key === 'Enter') {
         summarize();
+    }
+});
+
+trigger.addEventListener('click', (e) => {
+    e.stopPropagation(); // Prevent immediate closing
+    dropdown.classList.toggle('open');
+});
+
+// 2. Handle Option Selection
+options.forEach(option => {
+    option.addEventListener('click', () => {
+        // Remove 'selected' from all
+        options.forEach(opt => opt.classList.remove('selected'));
+        // Add 'selected' to clicked
+        option.classList.add('selected');
+        
+        // Update Text & Hidden Value
+        const value = option.getAttribute('data-value');
+        const label = option.textContent.trim();
+        
+        selectedText.textContent = label;
+        hiddenInput.value = value; // Update the hidden input!
+        
+        // Close menu
+        dropdown.classList.remove('open');
+    });
+});
+
+// 3. Close when clicking outside
+document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
     }
 });

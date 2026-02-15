@@ -79,7 +79,7 @@ h1 {
     background-clip: text;
     color: transparent;
     cursor: default;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    /* transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); */
 }
 
 h1:hover {
@@ -801,4 +801,108 @@ main {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(99, 102, 241, 0.3);
     transform: translateX(-50%) translateY(-2px); /* Lift slightly on hover */
+}
+
+/* --- Custom Glass Dropdown --- */
+.custom-dropdown {
+    position: relative;
+    width: 160px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* The Button */
+.dropdown-trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    padding: 10px 16px;
+    border-radius: 12px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    user-select: none;
+}
+
+.dropdown-trigger:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(99, 102, 241, 0.5); /* Indigo Border */
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.2);
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+    color: var(--text-muted);
+}
+
+/* Rotate arrow when open */
+.custom-dropdown.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* The Menu (Hidden by default) */
+.dropdown-options {
+    position: absolute;
+    bottom: 125%; /* Opens UPWARDS */
+    left: 0;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.95); /* Darker, solid background for readability */
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    
+    /* Animation states */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 50;
+}
+
+/* Open State */
+.custom-dropdown.open .dropdown-options {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+/* Individual Options */
+.dropdown-option {
+    padding: 10px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-muted);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.dropdown-option:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #fff;
+}
+
+.dropdown-option.selected {
+    background: rgba(99, 102, 241, 0.2); /* Indigo highlight */
+    color: #818cf8;
+}
+
+/* The little dot indicator */
+.dot {
+    width: 6px;
+    height: 6px;
+    background-color: transparent;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.dropdown-option.selected .dot {
+    background-color: #818cf8;
+    box-shadow: 0 0 5px #818cf8;
 }
